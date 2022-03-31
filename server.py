@@ -20,6 +20,8 @@ print(f'Listening for connections on {host}:{port}...')
 # Bind the server to ip and port and listen for clients
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server_socket.bind((host, port))
+# listen is used below to mark our socket instance as a passive socket
+# - A socket that will be used to accept inncoming requess with the accept() method
 server_socket.listen(4)
 FORMAT = 'utf-8'
 socket_list = [server_socket]
@@ -30,11 +32,15 @@ expected_msg_count = 0
 
 
 def receive():  # A function that adds clients to the socket list
+     # our server is now listening for connections.
+    # When a client attempts to connect, we use the accept()
+    # mehod to establish a connection
     conn, address = server_socket.accept()
     socket_list.append(conn)
     name = conn.recv(2042).decode()
     names.append(name)  # Add client to names array to wait until next round of conversations
     print(str.upper('\n'f'{name} has joined the chatroom\n'))
+    # sends a message from our server socket to client socket
     conn.send('Connected to the server'.encode(FORMAT))
 
 
@@ -79,7 +85,8 @@ def send_suggestion():
     return True
 
 
-# looping between server and client.
+# Created a while loop to loop between server and client.
+# Which runs untill we stop out server program
 while True:
     read_sockets, write_sockets, error_sockets = select.select(socket_list, [], socket_list)
     for list in read_sockets:
