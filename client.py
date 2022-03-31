@@ -12,7 +12,9 @@ bots = {"batman": batman,
         "joker": joker,
         "superman": superman, "spiderman": spiderman}
 
+#Instantiate client socket:
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+#Attempt to connect to server
 client_socket.connect((ip, port))
 client_socket.setblocking(False)
 # Sends the bot'name you selected to the server
@@ -56,9 +58,9 @@ def input_thread():
 
 
 threading.Thread(target=input_thread).start()
+# loop that bot sends messages and receive
 
 server_action, client_action = "", None
-# loop that bot sends messages and receive
 while True:
     if server_action:
         send_msg(server_action, client_action)
